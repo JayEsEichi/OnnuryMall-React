@@ -1,0 +1,8 @@
+.category-image-container {
+  justify-items: center;
+}
+
+.category-image-container .category-image {
+  max-width: 90px;
+  max-height: 90px;
+}

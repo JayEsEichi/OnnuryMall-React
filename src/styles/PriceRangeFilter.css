@@ -1,0 +1,130 @@
+.price-range-filter {
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* .price-range-header {
+  margin-bottom: 24px;
+} */
+
+.price-range-header h3 {
+  font-size: 16px;
+  color: #333;
+  margin: 0 0 12px 0;
+}
+
+.price-display {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+.range-container {
+  padding: 10px 10px;
+}
+
+.range-track {
+  height: 36px;
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+
+.range-track-inner {
+  height: 4px;
+  width: 100%;
+  border-radius: 2px;
+  align-self: center;
+}
+
+.range-thumb {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background-color: #e87722;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  outline: none;
+  transition: transform 0.2s ease;
+}
+
+.range-thumb.dragging {
+  transform: scale(1.1);
+}
+
+.thumb-label {
+  position: absolute;
+  top: -30px;
+  padding: 4px 8px;
+  background: #333;
+  color: white;
+  font-size: 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.2s ease;
+}
+
+.range-thumb:hover .thumb-label,
+.range-thumb.dragging .thumb-label {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.price-range-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.price-input-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.price-input-group input {
+  width: 80px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #333;
+}
+
+.price-separator {
+  color: #666;
+}
+
+.apply-button {
+  padding: 8px 16px;
+  background-color: #e87722;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.apply-button:hover {
+  background-color: #d66a1b;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .price-range-filter {
+    padding: 15px;
+  }
+
+  .price-input-group input {
+    width: 60px;
+  }
+}

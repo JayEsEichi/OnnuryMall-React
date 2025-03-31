@@ -1,0 +1,8 @@
+.banner-image-container {
+  justify-items: center;
+}
+
+.banner-image-container .banner-image {
+  max-width: 550px;
+  max-height: 450px;
+}
