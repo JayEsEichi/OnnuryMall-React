@@ -58,7 +58,20 @@ export const getSelectCategoryProducts = async (condition) => {
         condition.categoryLevel +
         "/" +
         condition.categoryId +
-        "/list"
+        "/list?sort=" +
+        condition.sort +
+        "&page=" +
+        condition.page +
+        "&startRangePrice=" +
+        condition.startRangePrice +
+        "&endRangePrice=" +
+        condition.endRangePrice +
+        "&brandId=" +
+        condition.brands +
+        "&labels=" +
+        condition.labels +
+        "&middleCategoryId=" +
+        condition.relatedDownCategorys
     );
 
     const selectCategoryProducts = responseData.data.data;

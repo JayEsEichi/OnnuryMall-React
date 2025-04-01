@@ -1,12 +1,4 @@
-import React, {
-  Suspense,
-  useState,
-  useLayoutEffect,
-  useCallback,
-  useEffect,
-  useRef,
-  useDeferredValue,
-} from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { Range, getTrackBackground } from "react-range";
 import { useParams } from "react-router-dom";
 
@@ -197,6 +189,9 @@ function SelectCategoryProductsPage() {
       priceRanges: new Set(),
     };
     setFilters(resetState);
+    setSortCondition(1);
+    setActiveFilters({ sort: "최신순" });
+    setIsDropdownOpen({ sort: false });
     setValues([0, maxPrice]);
   };
 
@@ -213,15 +208,15 @@ function SelectCategoryProductsPage() {
   const itemsPerPage = 20;
 
   // 페이지 변경 시 동작
-  const handlePageChange = async (page) => {
+  const handlePageChange = (page) => {
     // 변경한 페이지 번호 state 저장
     setCurrentPage(page);
+    setLoading(true); // 페이지 로딩 중
 
-    // 페이지 변경 후 적용되어있는 조건들
     const condition = {
       categoryLevel: category,
       categoryId: categoryId,
-      sort: 1,
+      sort: sortCondition,
       page: page,
       startRangePrice: values[0],
       endRangePrice: values[1],
@@ -230,19 +225,171 @@ function SelectCategoryProductsPage() {
       relatedDownCategorys: Array.from(filters["categories"]),
     };
 
-    console.dir(condition);
+    try {
+      // 페이지 변경 후 적용한 조건들로 API 호출
+      getSelectCategoryProducts(condition).then((res) => {
+        setTotalPages(
+          res.productCount <= itemsPerPage
+            ? 1
+            : Math.ceil(res.productCount / itemsPerPage)
+        ); // 처음 총 페이지 갯수 처리
+        setProductCount(res.productCount); // 제품 수량
+        setMaxPrice(res.maxPrice); // 제품 최대 가격
+        setProducts(res.products); // 제품 데이터들
+        setValues([values[0], res.maxPrice]); // 가격 필터 처리
+        setLoading(false); // 페이지 로딩 완료 처리
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      // Scroll to top of product list
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  // 필터 조건 적용 후 제품 리스트 호출
+  const conditionAdmitSearch = () => {
+    setLoading(true); // 페이지 로딩 중
+
+    const condition = {
+      categoryLevel: category,
+      categoryId: categoryId,
+      sort: sortCondition,
+      page: 1,
+      startRangePrice: values[0],
+      endRangePrice: values[1],
+      brands: Array.from(filters["brands"]),
+      labels: Array.from(filters["labels"]),
+      relatedDownCategorys: Array.from(filters["categories"]),
+    };
 
     try {
       // 페이지 변경 후 적용한 조건들로 API 호출
       getSelectCategoryProducts(condition).then((res) => {
-        setLoading(true); // 페이지 로딩 중
-        setTotalPages(Math.ceil(res.productCount / itemsPerPage)); // 처음 총 페이지 갯수 처리
+        setTotalPages(
+          res.productCount <= itemsPerPage
+            ? 1
+            : Math.ceil(res.productCount / itemsPerPage)
+        ); // 처음 총 페이지 갯수 처리
         setProductCount(res.productCount); // 제품 수량
         setMaxPrice(res.maxPrice); // 제품 최대 가격
         setProducts(res.products); // 제품 데이터들
-        setBrands(res.brands); // 제품 관련 브랜드들
-        setLabels(res.labels); // 제품 관련 라벨들
-        setRelatedCategories(res.relatedCategories); // 제품 관련 하위 카테고리들
+        setValues([values[0], res.maxPrice]); // 가격 필터 처리
+        setLoading(false); // 페이지 로딩 완료 처리
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      // Scroll to top of product list
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  // 정렬 조건 필터 상태값 state
+  const [sortCondition, setSortCondition] = useState(1);
+
+  // 정렬 조건 필터에 들어갈 항목들
+  const [activeFilters, setActiveFilters] = useState({
+    sort: "최신순",
+    // category: "all",
+    // priceRange: "all",
+    // delivery: "all",
+  });
+
+  // 정렬 조건 필터 메뉴의 선택 여부 판단 state
+  const [isDropdownOpen, setIsDropdownOpen] = useState({
+    sort: false,
+    // category: false,
+    // price: false,
+    // delivery: false,
+  });
+
+  // 정렬 조건 필터 메뉴 1
+  const sortOptions = [
+    { value: "최신순", label: "최신순", sortNum: 1 },
+    { value: "낮은가격순", label: "낮은가격순", sortNum: 2 },
+    { value: "높은가격순", label: "높은가격순", sortNum: 3 },
+    { value: "누적판매순", label: "누적판매순", sortNum: 4 },
+  ];
+
+  // const categories = [
+  //   { value: "all", label: "All Categories" },
+  //   { value: "electronics", label: "Electronics" },
+  //   { value: "clothing", label: "Clothing" },
+  //   { value: "home", label: "Home & Living" },
+  //   { value: "beauty", label: "Beauty" },
+  // ];
+
+  // const priceRanges = [
+  //   { value: "all", label: "All Prices" },
+  //   { value: "under50", label: "Under $50" },
+  //   { value: "50to100", label: "$50 to $100" },
+  //   { value: "100to200", label: "$100 to $200" },
+  //   { value: "over200", label: "Over $200" },
+  // ];
+
+  // const deliveryOptions = [
+  //   { value: "all", label: "All Options" },
+  //   { value: "free", label: "Free Delivery" },
+  //   { value: "express", label: "Express Delivery" },
+  //   { value: "pickup", label: "Store Pickup" },
+  // ];
+
+  // 정렬 조건 필터 변경 시 선택된 정렬 조건 필터 반영
+  const handleSortChange = (filterType, value) => {
+    const newFilters = {
+      ...activeFilters,
+      [filterType]: value,
+    };
+    setActiveFilters(newFilters);
+    setIsDropdownOpen({ ...isDropdownOpen, [filterType]: false });
+
+    let sort = 1;
+
+    switch (value) {
+      case "최신순":
+        setSortCondition(1);
+        sort = 1;
+        break;
+      case "낮은가격순":
+        setSortCondition(2);
+        sort = 2;
+        break;
+      case "높은가격순":
+        setSortCondition(3);
+        sort = 3;
+        break;
+      case "누적판매순":
+        setSortCondition(4);
+        sort = 4;
+        break;
+    }
+
+    setLoading(true); // 페이지 로딩 중
+
+    const condition = {
+      categoryLevel: category,
+      categoryId: categoryId,
+      sort: sort,
+      page: 1,
+      startRangePrice: values[0],
+      endRangePrice: values[1],
+      brands: Array.from(filters["brands"]),
+      labels: Array.from(filters["labels"]),
+      relatedDownCategorys: Array.from(filters["categories"]),
+    };
+
+    try {
+      // 페이지 변경 후 적용한 조건들로 API 호출
+      getSelectCategoryProducts(condition).then((res) => {
+        setTotalPages(
+          res.productCount <= itemsPerPage
+            ? 1
+            : Math.ceil(res.productCount / itemsPerPage)
+        ); // 처음 총 페이지 갯수 처리
+        setProductCount(res.productCount); // 제품 수량
+        setMaxPrice(res.maxPrice); // 제품 최대 가격
+        setProducts(res.products); // 제품 데이터들
         setValues([0, res.maxPrice]); // 가격 필터 처리
         setLoading(false); // 페이지 로딩 완료 처리
       });
@@ -253,6 +400,59 @@ function SelectCategoryProductsPage() {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
+
+  // 정렬 조건 드랍다운 메뉴 각 컨텐츠들을 눌렀을 때 해당 필터 메뉴 선택 여부 isDropdown state 변경
+  const toggleDropdown = (dropdown) => {
+    setIsDropdownOpen({
+      ...Object.keys(isDropdownOpen).reduce(
+        (acc, key) => ({
+          ...acc,
+          [key]: key === dropdown ? !isDropdownOpen[key] : false,
+        }),
+        {}
+      ),
+    });
+  };
+
+  // 정렬 조건 필터 드랍다운 메뉴
+  const FilterDropdown = ({ type, options, activeValue }) => (
+    <div className="filter-dropdown-container">
+      <button
+        className={`filter-button ${isDropdownOpen[type] ? "active" : ""}`}
+        onClick={() => toggleDropdown(type)}
+      >
+        {options.find((opt) => opt.value === activeValue)?.label}
+        <svg
+          className={`arrow-icon ${isDropdownOpen[type] ? "open" : ""}`}
+          width="10"
+          height="6"
+          viewBox="0 0 10 6"
+        >
+          <path
+            d="M1 1L5 5L9 1"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            fill="none"
+          />
+        </svg>
+      </button>
+      {isDropdownOpen[type] && (
+        <div className="dropdown-menu">
+          {options.map((option) => (
+            <button
+              key={option.value}
+              className={`dropdown-item ${
+                activeValue === option.value ? "active" : ""
+              }`}
+              onClick={() => handleSortChange(type, option.value)}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 
   // API 중복 호출 확인용 useRef hook
   const apiCallRef = useRef(false);
@@ -277,7 +477,11 @@ function SelectCategoryProductsPage() {
       // 초기 필터 조건으로 카테고리 제품 리스트 페이지 API 호출 후 각 반환 데이터 state 저장
       getSelectCategoryProducts(condition).then((res) => {
         setLoading(true); // 페이지 로딩 중
-        setTotalPages(Math.ceil(res.productCount / itemsPerPage)); // 처음 총 페이지 갯수 처리
+        setTotalPages(
+          res.productCount <= itemsPerPage
+            ? 1
+            : Math.ceil(res.productCount / itemsPerPage)
+        ); // 처음 총 페이지 갯수 처리
         setProductCount(res.productCount); // 제품 수량
         setMaxPrice(res.maxPrice); // 제품 최대 가격
         setProducts(res.products); // 제품 데이터들
@@ -290,10 +494,8 @@ function SelectCategoryProductsPage() {
 
       // useRef 값을 true 로 바꾸어 API 중복 호출 방지
       apiCallRef.current = true;
-    } else {
-      apiCallRef.current = false;
     }
-  }, [category, categoryId, currentPage]); // <- category, categoryId 파라미터들이 이전과 동일할 경우 중복 호출 되지 않도록 처리
+  }, [category, categoryId, currentPage, filters]); // <- category, categoryId 파라미터들이 이전과 동일할 경우 중복 호출 되지 않도록 처리
 
   return (
     <div id="select-category-products">
@@ -383,10 +585,11 @@ function SelectCategoryProductsPage() {
                 </div>
               </div>
 
+              {/* 가격 범위 드래그 영역 */}
               <div className="range-container">
                 <Range
                   values={values}
-                  step={10}
+                  step={1000}
                   min={values[0]}
                   max={values[1]}
                   onChange={handleChange}
@@ -414,6 +617,7 @@ function SelectCategoryProductsPage() {
                   )}
                   renderThumb={({ props, isDragged, index }) => (
                     <div
+                      key={"thumb-" + index}
                       {...props}
                       className={`range-thumb ${isDragged ? "dragging" : ""}`}
                     >
@@ -425,64 +629,137 @@ function SelectCategoryProductsPage() {
                 />
               </div>
 
+              {/* 가격 범위 텍스트 영역 */}
               <div className="price-range-footer">
                 <div className="price-input-group">
-                  <input
-                    type="number"
-                    value={values[0]}
-                    onChange={(e) => {
-                      const newValue = Math.max(
-                        values[0],
-                        Number(e.target.value)
-                      );
-                      handleChange([newValue, values[1]]);
-                    }}
-                    min={values[0]}
-                    max={values[1]}
-                  />
-                  <span className="price-separator">-</span>
-                  <input
-                    type="number"
-                    value={values[1]}
-                    onChange={(e) => {
-                      const newValue = Math.min(
-                        values[1],
-                        Number(e.target.value)
-                      );
-                      handleChange([values[0], newValue]);
-                    }}
-                    min={values[0]}
-                    max={values[1]}
-                  />
-                  <button
-                    className="apply-button"
-                    onClick={() => handleChange?.(values)}
-                  >
-                    Apply
-                  </button>
+                  <div className="price-group">
+                    <input
+                      type="number"
+                      value={values[0]}
+                      onChange={(e) => {
+                        const newValue = Number(e.target.value);
+                        handleChange([newValue, values[1]]);
+                      }}
+                      min={values[0]}
+                      max={values[1]}
+                    />
+                  </div>
+                  <div className="price-group">
+                    <span className="price-separator">-</span>
+                  </div>
+                  <div className="price-group">
+                    <input
+                      type="number"
+                      value={values[1]}
+                      onChange={(e) => {
+                        const newValue = Number(e.target.value);
+                        handleChange([values[0], newValue]);
+                      }}
+                      min={values[0]}
+                      max={values[1]}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
+
+            {/* 필터 조건 반영 버튼 영역 */}
+            <button
+              className="apply-button"
+              id="apply-button"
+              onClick={conditionAdmitSearch}
+            >
+              Apply
+            </button>
           </div>
         </div>
 
         <div id="products-content">
+          {/* 정렬 조건 필터 영역 */}
+          <div className="horizontal-filter">
+            {/* 정렬 조건 필터 메뉴 영역 */}
+            <div className="filter-section">
+              <FilterDropdown
+                type="sort"
+                options={sortOptions}
+                activeValue={activeFilters.sort}
+              />
+
+              {/* <FilterDropdown
+                type="category"
+                options={categories}
+                activeValue={activeFilters.category}
+              />
+
+              <FilterDropdown
+                type="price"
+                options={priceRanges}
+                activeValue={activeFilters.priceRange}
+              />
+
+              <FilterDropdown
+                type="delivery"
+                options={deliveryOptions}
+                activeValue={activeFilters.delivery}
+              /> */}
+            </div>
+
+            {/* 선택된 정렬 필터 메뉴 노출 영역 */}
+            <div className="active-filters">
+              {Object.entries(activeFilters).map(([key, value]) => {
+                if (value !== "all") {
+                  const option = [
+                    ...sortOptions,
+                    {
+                      /* ...categories,
+                    ...priceRanges,
+                    ...deliveryOptions, */
+                    },
+                  ].find((opt) => opt.value === value);
+
+                  return option ? (
+                    <span key={key} className="filter-tag">
+                      {option.label}
+                      <button
+                        onClick={() => handleSortChange(key, "all")}
+                        className="remove-filter"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ) : null;
+                }
+                return null;
+              })}
+            </div>
+          </div>
+
+          {/* 로딩 및 제품 리스트 노출 영역 */}
           <div id="select-category-products-content">
             {loading ? (
-              <div className="loading-spinner">Loading...</div>
+              <>
+                <div className="content-1 loader">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+              </>
             ) : (
               <>
                 <div id="content-1">
                   {products.map(selectCategoryProductCard)}
                 </div>
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={handlePageChange}
-                  siblingCount={1}
-                />
               </>
             )}
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+              siblingCount={1}
+            />
           </div>
         </div>
       </div>

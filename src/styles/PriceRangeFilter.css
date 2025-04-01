@@ -77,14 +77,15 @@
 }
 
 .price-range-footer {
-  display: flex;
-  justify-content: space-between;
+  /* display: flex; */
+  /* justify-content: space-between; */
   align-items: center;
   gap: 16px;
 }
 
 .price-input-group {
   display: flex;
+  justify-content: space-around;
   align-items: center;
   gap: 8px;
 }
