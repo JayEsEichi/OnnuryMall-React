@@ -4,6 +4,7 @@ import FooterLayout from "./layouts/CommonFooterLayout";
 import Home from "./pages/Home";
 import Login from "./pages/LoginPage";
 import SelectCategoryProducts from "./pages/SelectCategoryProductsPage";
+import ProductDetail from "./pages/ProductDetailPage";
 import Cart from "./pages/CartPage";
 import Notice from "./pages/NoticePage";
 import Faq from "./pages/FaqPage";
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
       {
         path: "/:category/category/:categoryId/products",
         element: <SelectCategoryProducts key="9" />,
+      },
+      {
+        path: "/product/:productId",
+        element: <ProductDetail key="10" />,
       },
     ],
   },

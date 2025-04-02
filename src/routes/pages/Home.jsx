@@ -42,6 +42,7 @@ function weeklyBestProductCard(Product) {
     <SwiperSlide>
       <ProductCard
         key={"c" + Product.productId}
+        productId={Product.productId}
         thumbnailImg={Product.mediaList[0].imgUrl}
         brand={Product.brand}
         productType={Product.deliveryType}
@@ -57,6 +58,7 @@ function categoryBestProductCard(Product) {
   return (
     <ProductCard
       key={"c" + Product.productId}
+      productId={Product.productId}
       thumbnailImg={Product.mediaList[0].imgUrl}
       brand={Product.brand}
       productType={Product.deliveryType}
@@ -72,6 +74,7 @@ function mainPageBannerCard(Banner) {
     <SwiperSlide>
       <BannerCard
         key={Banner.bannerId}
+        bannerId={Banner.bannerId}
         bannerImage={Banner.bannerImages[0].imgUrl}
       />
     </SwiperSlide>
@@ -84,6 +87,7 @@ function mainPageCategoryCard(Category) {
     <SwiperSlide>
       <CategoryCard
         key={Category.categoryId}
+        categoryId={Category.categoryId}
         categoryName={Category.categoryName}
         categoryImage={Category.imgUrl}
       />
@@ -446,6 +450,7 @@ function Home() {
             return (
               <ProductCard
                 key={product.productId}
+                productId={product.productId}
                 thumbnailImg={product.mediaList[0].imgUrl}
                 brand={product.brand}
                 productType={

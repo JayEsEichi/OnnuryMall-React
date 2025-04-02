@@ -1,4 +1,3 @@
-// import { NavLink, useNavigate } from "react-router-dom";
 import React, { useState, useLayoutEffect, useEffect, useRef } from "react";
 import "../styles/Header.css";
 import logoImage from "../assets/onnury_logo.png";

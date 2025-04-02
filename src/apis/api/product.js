@@ -4,6 +4,7 @@ import {
   newReleaseProducts,
   weeklyBestProducts,
   categorySelectProducts,
+  productDetailInfo,
 } from "../services/product";
 
 // 메인 페이지 Weekly 판매 베스트 제품들 호출 API
@@ -16,7 +17,7 @@ export const getWeeklyBestProducts = async () => {
 
     return weeklyBestProductList;
   } catch (error) {
-    console.dir(error);
+    console.error(error);
   }
 };
 
@@ -32,7 +33,7 @@ export const getCategoryBestProducts = async (categoryId) => {
 
     return categoryBestProductList;
   } catch (error) {
-    console.dir(error);
+    console.error(error);
   }
 };
 
@@ -46,7 +47,7 @@ export const getNewReleaseProducts = async () => {
 
     return newReleaseProductList;
   } catch (error) {
-    console.dir(error);
+    console.error(error);
   }
 };
 
@@ -90,6 +91,22 @@ export const getSelectCategoryProducts = async (condition) => {
 
     return response;
   } catch (error) {
-    console.dir(error);
+    console.error(error);
+  }
+};
+
+// 제품 상세 조회
+export const getProductDetail = async (productId) => {
+  try {
+    const responseData = await defaultInstance.get(
+      "/api/product/page/detail/" + productId
+    );
+
+    const productDetail = responseData.data.data;
+    const productDetailData = productDetailInfo(productDetail);
+
+    return productDetailData;
+  } catch (error) {
+    console.error(error);
   }
 };

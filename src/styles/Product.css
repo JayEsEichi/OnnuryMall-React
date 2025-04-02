@@ -1,3 +1,7 @@
+.all-product {
+  text-decoration: none;
+}
+
 .product-container {
   justify-items: center;
   /* width: 80%; */
@@ -40,6 +44,7 @@
 .product-container .product-several-info .product-name {
   font-weight: 700 !important;
   font-size: 1rem !important;
+  color: black;
 }
 
 .product-container .product-several-info .price-text {

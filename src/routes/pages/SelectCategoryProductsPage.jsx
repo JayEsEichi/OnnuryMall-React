@@ -18,6 +18,7 @@ function selectCategoryProductCard(Product) {
   return (
     <ProductCard
       key={"c" + Product.productId}
+      productId={Product.productId}
       thumbnailImg={Product.mediaList[0].imgUrl}
       brand={Product.brand}
       productType={Product.deliveryType}
