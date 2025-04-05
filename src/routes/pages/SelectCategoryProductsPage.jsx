@@ -140,7 +140,6 @@ function SelectCategoryProductsPage() {
 
   const handlePriceChange = (priceRange) => {
     console.log("Price range selected:", priceRange);
-    // Implement your filtering logic here
   };
 
   // 필터 가격 범위 변경
