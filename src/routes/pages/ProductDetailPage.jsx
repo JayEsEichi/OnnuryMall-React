@@ -528,7 +528,6 @@ function ProductDetailPage() {
 
           {/* 리뷰 정보 */}
           <div className="review-info-section">
-            {/* <RelatedProducts categoryId={product.categoryId} /> */}
             <div className="review-title">
               <h3>상품리뷰</h3>
             </div>
