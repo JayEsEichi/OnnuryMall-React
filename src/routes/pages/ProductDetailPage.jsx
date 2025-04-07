@@ -272,6 +272,23 @@ function ProductDetailPage() {
   return (
     <div id="all-product-detail">
       <div id="product-detail-content">
+        <div className="product-detail-page-header">
+          <div className="product-related-category-header">
+            <p>
+              <a id={"downCategory-" + productDetailInfo.upCategoryId}>
+                {productDetailInfo.upCategory}
+              </a>
+              {"  >  "}
+              <a id={"downCategory-" + productDetailInfo.middleCategoryId}>
+                {productDetailInfo.middleCategory}
+              </a>
+              {"  >  "}
+              <a id={"downCategory-" + productDetailInfo.downCategoryId}>
+                {productDetailInfo.downCategory}
+              </a>
+            </p>
+          </div>
+        </div>
         <div className="product-detail-page">
           <div className="product-detail-container">
             {/* 제품 이미지 영역 */}
@@ -485,6 +502,22 @@ function ProductDetailPage() {
             </div>
           </div>
 
+          {/* 하위 제품 상세 정보 컨텐츠 focus 버튼 영역 */}
+          <div className="product-focus-button-tabs">
+            <div className="focus-button">
+              <button>상세정보</button>
+            </div>
+            <div className="focus-button">
+              <button>리뷰</button>
+            </div>
+            <div className="focus-button">
+              <button>Q&A</button>
+            </div>
+            <div className="focus-button">
+              <button>반품/교환정보</button>
+            </div>
+          </div>
+
           {/* 제품 상세 정보 이미지 및 내용 노출 영역 */}
           <div
             className="product-details-tabs"
@@ -492,6 +525,61 @@ function ProductDetailPage() {
               __html: productDetailInfo.productDetailInfo,
             }}
           ></div>
+
+          {/* 리뷰 정보 */}
+          <div className="review-info-section">
+            {/* <RelatedProducts categoryId={product.categoryId} /> */}
+            <div className="review-title">
+              <h3>상품리뷰</h3>
+            </div>
+            <div className="review-explain">
+              상품을 구매하신 분들이 작성하신 리뷰입니다. 리뷰 작성시 아래
+              금액만큼 포인트가 적립됩니다.
+              <dl className="total-explain">
+                <dt className="text-explain">텍스트 리뷰 :</dt>
+                <dd className="text-explain">50원</dd>
+                <dt className="media-explain">포토/동영상 리뷰 :</dt>
+                <dd className="media-explain">150원</dd>
+                <dt className="one-month-text-explain">
+                  한달사용 텍스트 리뷰 :
+                </dt>
+                <dd className="one-month-text-explain">50원</dd>
+                <dt className="one-month-media-explain">
+                  한달사용 포토/동영상 리뷰 :
+                </dt>
+                <dd className="one-month-media-explain">150원</dd>
+              </dl>
+            </div>
+            <div className="review-summary">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+            <div className="media-review-title">
+              <h4>포토&동영상 0건</h4>
+            </div>
+            <div className="media-review-contents">
+              <div className="medias">{/* <img></img> */}</div>
+              <div className="medias">{/* <img></img> */}</div>
+              <div className="medias">{/* <img></img> */}</div>
+              <div className="medias">{/* <img></img> */}</div>
+              <div className="medias">{/* <img></img> */}</div>
+              <div className="medias">{/* <img></img> */}</div>
+              <div className="medias">{/* <img></img> */}</div>
+              <div className="medias">{/* <img></img> */}</div>
+            </div>
+          </div>
+
+          {/* Q&A 정보 */}
+          <div className="product-qna-info-section">
+            {/* <RelatedProducts categoryId={product.categoryId} /> */}
+          </div>
+
+          {/* 반품/교환환 정보 */}
+          <div className="recall-info-section">
+            {/* <RelatedProducts categoryId={product.categoryId} /> */}
+          </div>
 
           {/* 판매자 정보 */}
           <div className="seller-info-section">

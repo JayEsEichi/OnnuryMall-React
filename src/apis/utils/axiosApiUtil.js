@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // 온누리 DEV 서버 URL
-const BASE_URL = "http://116.125.141.139:8090/";
+const BASE_URL = "http://116.125.141.139:8091/";
 
 // 토큰이 필요없는 API
 const axiosApi = (url, options) => {
