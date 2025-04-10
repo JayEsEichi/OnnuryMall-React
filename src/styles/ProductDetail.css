@@ -458,6 +458,8 @@
   width: 100%;
   display: grid;
   grid-template-columns: 2fr 6fr 2fr 2fr;
+  border-top: 3px solid black;
+  border-bottom: 0.5px solid rgb(201, 201, 201);
 }
 
 .product-qna-info-section
@@ -473,6 +475,7 @@
   width: 100%;
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .product-qna-info-section
@@ -490,6 +493,12 @@
   .product-qna-info-content
   div {
   text-align: center;
+}
+
+.product-qna-info-section-contents
+  .product-qna-info-list
+  .product-qna-info-content {
+  border-bottom: 0.5px solid rgb(226, 226, 226);
 }
 
 .qna-btn-collection {
@@ -673,8 +682,53 @@ input:checked + .slider:before {
   width: 1400px;
 }
 
+.recall-info-section .recall-info-title {
+  border-bottom: 3px solid black;
+}
+
+.recall-info-section
+  .recall-info-section-contents
+  .recall-change-notice-header {
+  text-align: center;
+  border-top: 0.2px solid rgb(221, 221, 221);
+  border-bottom: 0.2px solid rgb(221, 221, 221);
+  background-color: rgb(240, 239, 239);
+}
+
+.recall-info-section
+  .recall-info-section-contents
+  .recall-change-notice-contents
+  .recall-change-table
+  > tr,
+th,
+td {
+  border-top: 0.2px solid rgb(221, 221, 221);
+  border-bottom: 0.2px solid rgb(221, 221, 221);
+}
+
+.recall-info-section
+  .recall-info-section-contents
+  .recall-change-notice-contents
+  .recall-change-table
+  ul {
+  list-style: none;
+  padding: 0;
+}
+
+.recall-info-section
+  .recall-info-section-contents
+  .recall-change-notice-contents
+  .recall-change-table
+  th {
+  background-color: rgb(240, 239, 239);
+}
+
 .seller-info-section {
   width: 1400px;
+}
+
+.seller-info-section .seller-info-section-contents {
+  width: 100%;
 }
 
 .warning-section {
