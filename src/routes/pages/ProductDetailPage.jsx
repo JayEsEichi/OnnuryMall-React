@@ -212,6 +212,7 @@ function ProductDetailPage() {
 
     console.log(existOptionAndDetailOption.keys());
     console.log(existOptionAndDetailOption);
+
     if (checkAllOptionSelect) {
       console.log("옵션 전부 선택함");
     } else {
@@ -273,6 +274,19 @@ function ProductDetailPage() {
     };
     console.log("Adding to cart:", cartItem);
   };
+
+  // 포커싱 되어 스크롤링 이동할 컨텐츠들이 갖고 있을 ref
+  // const focusDetailContent = useRef(null);
+
+  // 포커싱 메뉴 클릭 해당 상세 컨텐츠로 이동할 동작 함수
+  function scrollFocusDetailContent(index) {
+    const content = document.querySelectorAll(".contents-info")[index];
+    content.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+      inline: "start",
+    });
+  }
 
   if (loading) {
     return <div className="loading-spinner">Loading...</div>;
@@ -513,7 +527,6 @@ function ProductDetailPage() {
 
           {/* 연관 카테고리 제품 리스트 노출 영역 */}
           <div className="related-category-products-section">
-            {/* <RelatedProducts categoryId={product.categoryId} /> */}
             <div id="related-category-products-section-title">
               <h3>
                 <strong>연관 카테고리 제품</strong>
@@ -629,29 +642,33 @@ function ProductDetailPage() {
           {/* 하위 제품 상세 정보 컨텐츠 focus 버튼 영역 */}
           <div className="product-focus-button-tabs">
             <div className="focus-button">
-              <button>상세정보</button>
+              <button onClick={() => scrollFocusDetailContent(0)}>
+                상세정보
+              </button>
             </div>
             <div className="focus-button">
-              <button>리뷰</button>
+              <button onClick={() => scrollFocusDetailContent(1)}>리뷰</button>
             </div>
             <div className="focus-button">
-              <button>Q&A</button>
+              <button onClick={() => scrollFocusDetailContent(2)}>Q&A</button>
             </div>
             <div className="focus-button">
-              <button>반품/교환정보</button>
+              <button onClick={() => scrollFocusDetailContent(3)}>
+                반품/교환정보
+              </button>
             </div>
           </div>
 
           {/* 제품 상세 정보 이미지 및 내용 노출 영역 */}
           <div
-            className="product-details-tabs"
+            className="product-details-tabs contents-info"
             dangerouslySetInnerHTML={{
               __html: productDetailInfo.productDetailInfo,
             }}
           ></div>
 
           {/* 리뷰 정보 */}
-          <div className="review-info-section">
+          <div className="review-info-section contents-info">
             <div className="review-title">
               <h3>
                 <strong>상품리뷰</strong>
@@ -676,22 +693,30 @@ function ProductDetailPage() {
               </dl>
             </div>
             <div className="review-summary">
-              <div>
-                <p>사용자 총 평점</p>
+              <div className="user-rate">
+                <p>
+                  <strong>사용자 총 평점</strong>
+                </p>
                 <div className="stars" style={{ "--rating": 4 }}></div>
                 <p>최근 6개월 {"5.0"}</p>
                 <p>5.0 / 5.0</p>
               </div>
-              <div>
-                <p>전체 리뷰 수</p>
+              <div className="total-rate-count">
+                <p>
+                  <strong>전체 리뷰 수</strong>
+                </p>
                 <img src={speechImage}></img>
                 <p>39</p>
               </div>
-              <div>
-                <p>평점 비율</p>
+              <div className="rate-ratio">
+                <p>
+                  <strong>평점 비율</strong>
+                </p>
               </div>
-              <div>
-                <p>다른 구매자 평</p>
+              <div className="other-user-review">
+                <p>
+                  <strong>다른 구매자 평</strong>
+                </p>
               </div>
             </div>
             <div className="media-review-title">
@@ -765,8 +790,7 @@ function ProductDetailPage() {
           </div>
 
           {/* Q&A 정보 */}
-          <div className="product-qna-info-section">
-            {/* <RelatedProducts categoryId={product.categoryId} /> */}
+          <div className="product-qna-info-section contents-info">
             <div className="product-qna-info-header">
               <h3>
                 <strong>Q&A정보</strong>
@@ -875,7 +899,7 @@ function ProductDetailPage() {
           </div>
 
           {/* 반품/교환 정보 */}
-          <div className="recall-info-section">
+          <div className="recall-info-section contents-info">
             <div className="recall-info-title">
               <h2>
                 <strong>반품/교환정보</strong>
@@ -991,7 +1015,7 @@ function ProductDetailPage() {
               </h3>
             </div>
             <div className="seller-info-section-contents">
-              <tbody>
+              <tbody className="seller-info-table">
                 <tr>
                   <th colSpan={2}>상호명</th>
                   <td colSpan={4}>주식회사 SEHUN DEVELOPER</td>
@@ -1004,13 +1028,40 @@ function ProductDetailPage() {
 
           {/* 유의사항 */}
           <div className="warning-section">
-            {/* <RelatedProducts categoryId={product.categoryId} /> */}
             <div className="warning-title">
               <h3>
                 <strong>유의사항</strong>
               </h3>
             </div>
-            <div className="warning-section-contents"></div>
+            <div className="warning-section-contents">
+              <ul className="warning-sentence">
+                <li>
+                  * 전자상거래 등에서의 소비자보호에 관한 법률에 의한 반품규정이
+                  판매자가 지정한 반품 조건보다 우선합니다.
+                </li>
+                <li>
+                  * 전자상거래 등에서의 소비자보호에 관한 법률에 의거하여
+                  미성년자가 물품을 구매하는 경우, 법정대리인이 동의하지 않으면
+                  미성년자 본인 또는 법정대리인이 구매를 취소할 수 있습니다.
+                </li>
+                <li>
+                  * 전기용품 및 생활용품 안전관리법 및 어린이제품 안전 특별법
+                  규정에 의한 안전관리대상 품목인 전기용품, 생활용품,
+                  어린이제품을 판매 또는 구매하실 경우에는 해당 제품이 안전인증,
+                  안전확인, 공급자적합성확인, 안전기준준수 적용 제품인지
+                  확인하시기 바랍니다.
+                </li>
+                <li>
+                  * 정상적인인 결제시스템을 이용하지 않고 판매자와 직접 거래하실
+                  경우 상품을 받지 못하거나 구매한 상품과 상이한 상품을 받는 등
+                  피해가 발생할 수 있으니 유의하시기 바랍니다.
+                </li>
+                <li>
+                  * 등록된 판매상품과 상품의 내용은 판매자가 등록한 것으로서,
+                  등록된 내용에 대하여 일체의 책임을 지지 않습니다.
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>

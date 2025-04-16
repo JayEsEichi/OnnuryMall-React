@@ -5,6 +5,11 @@
   justify-items: center;
 }
 
+.product-detail-page > div {
+  margin-top: 120px;
+  margin-bottom: 50px;
+}
+
 .product-detail-page-header {
   max-width: 1400px;
   margin: 0 auto;
@@ -387,6 +392,15 @@
 #product-detail-content
   .product-detail-page
   .review-info-section
+  .review-summary
+  > div {
+  justify-items: center;
+  margin-top: 10%;
+}
+
+#product-detail-content
+  .product-detail-page
+  .review-info-section
   .real-review-contents {
   display: flex;
 }
@@ -733,4 +747,10 @@ td {
 
 .warning-section {
   width: 1400px;
+}
+
+.warning-section .warning-section-contents .warning-sentence {
+  list-style: none;
+  padding: 0;
+  gap: 10px;
 }
