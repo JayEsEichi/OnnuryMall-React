@@ -2,7 +2,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 24px;
-  justify-items: center;
+  justify-items: center; 
 }
 
 .product-detail-page > div {
@@ -65,7 +65,7 @@
 }
 
 .product-focus-button-tabs .focus-button {
-  justify-items: center;
+  display: grid; justify-items: center; 
   text-align: center;
 }
 
@@ -114,6 +114,11 @@
   position: sticky;
   top: 24px;
   justify-content: center;
+}
+
+#product-detail-image-section{
+  display: grid;
+  justify-items: center;
 }
 
 .product-info-section {
@@ -394,7 +399,7 @@
   .review-info-section
   .review-summary
   > div {
-  justify-items: center;
+  display: grid; justify-items: center; 
   margin-top: 10%;
 }
 

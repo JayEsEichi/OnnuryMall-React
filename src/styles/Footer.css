@@ -1,4 +1,5 @@
 footer {
+    display: grid;
     background-color: #f7f7f8;
     justify-items: center;
     flex-wrap: wrap-reverse;

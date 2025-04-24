@@ -125,18 +125,21 @@ function ProductDetailPage() {
         setProductDetailInfo(res);
 
         // 만약 제품에 연관된 옵션 정보들이 하나라도 존재할 경우 진입
-        if (productDetailInfo.productOptionList.length >= 1) {
-          // 어떤 옵션을 가지고 있는지 초기에 저장되어 관리하게 될 Map
-          let existOptionMap = new Map();
+        if (res.productOptionList.length >= 1) {
 
           // 옵션 정보들을 돌리면서 옵션과 상세 옵션에 대한 정보들을 Map에 저장
-          productDetailInfo.productOptionList.forEach((eachOption) => {
+          res.productOptionList.forEach((eachOption) => {
             if (eachOption.productDetailOptionList.length >= 1) {
+              // 어떤 옵션을 가지고 있는지 초기에 저장되어 관리하게 될 Map
+              let existOptionMap = new Map();
+
               eachOption.productDetailOptionList.forEach((eachDetailOption) => {
-                existOptionMap.set(
-                  eachOption.productOptionId,
-                  eachDetailOption.detailOptionId
-                );
+                existOptionMap.set(eachOption.productOptionId,
+                  {
+                    detailOptionId: eachDetailOption.detailOptionId,
+                    detailOptionName: eachDetailOption.detailOptionName
+                  }
+                )
               });
 
               setExistOptionAndDetailOption(existOptionMap);
@@ -186,22 +189,22 @@ function ProductDetailPage() {
     console.dir("선택 상세 옵션 명 : " + selectDetailOptionName);
 
     // map에 있는 데이터에 덮어씌울 경우
-    setSelectOptionAndDetailOption((prev) =>
-      new Map(prev).set(selectOptionId, {
+    setSelectOptionAndDetailOption(
+      new Map().set(selectOptionId, {
         detailOptionId: selectDetailOptionId,
         detailOptionName: selectDetailOptionName,
       })
     );
+  };
 
-    let checkSelectOptionAndDetailOption = new Map(selectOptionAndDetailOption);
-    checkSelectOptionAndDetailOption.set(selectOptionId, {
-      detailOptionId: selectDetailOptionId,
-      detailOptionName: selectDetailOptionName,
-    });
-
+  if(selectOptionAndDetailOption.size !== 0){
     let checkAllOptionSelect = false;
-    existOptionAndDetailOption.keys().forEach((eachOptionDataKey) => {
-      if (checkSelectOptionAndDetailOption.has(eachOptionDataKey)) {
+  
+    Array.from(existOptionAndDetailOption).forEach((eachOptionDataKey) => {
+
+      console.log("맵에 저장되어있는 키 값 확인 ", eachOptionDataKey[0]);
+
+      if (selectOptionAndDetailOption.has(eachOptionDataKey[0])) {
         setAllOptionSelectCheck(true);
         checkAllOptionSelect = true;
       } else {
@@ -210,38 +213,13 @@ function ProductDetailPage() {
       }
     });
 
-    console.log(existOptionAndDetailOption.keys());
-    console.log(existOptionAndDetailOption);
-
     if (checkAllOptionSelect) {
       console.log("옵션 전부 선택함");
     } else {
       console.log("옵션 전부 선택 못함");
-      console.dir(checkSelectOptionAndDetailOption.entries());
+      console.dir(selectOptionAndDetailOption.entries());
     }
-
-    // if (allOptionSelectCheck) {
-    //   return (
-    //     <div>
-    //       {selectOptionAndDetailOption.values().map((eachSelectOptionData) => {
-    //         return (
-    //           <div>
-    //             <p>{eachSelectOptionData.detailOptionId}</p>
-    //             <p>{eachSelectOptionData.detailOptionName}</p>
-    //           </div>
-    //         );
-    //       })}
-    //     </div>
-    //   );
-    // } else {
-    //   return null;
-    // }
-
-    // setSelectedOptions((prev) => ({
-    //   ...prev,
-    //   [optionId]: detailOptionId,
-    // }));
-  };
+  }
 
   // 제품 총 구매 가격 계산
   const calculateTotalPrice = () => {
@@ -274,9 +252,6 @@ function ProductDetailPage() {
     };
     console.log("Adding to cart:", cartItem);
   };
-
-  // 포커싱 되어 스크롤링 이동할 컨텐츠들이 갖고 있을 ref
-  // const focusDetailContent = useRef(null);
 
   // 포커싱 메뉴 클릭 해당 상세 컨텐츠로 이동할 동작 함수
   function scrollFocusDetailContent(index) {
@@ -440,13 +415,12 @@ function ProductDetailPage() {
                 })}
                 {allOptionSelectCheck ? (
                   <div>
-                    {selectOptionAndDetailOption
-                      .values()
+                    {Array.from(selectOptionAndDetailOption)
                       .map((eachSelectOptionData) => {
                         return (
-                          <div>
-                            <p>{eachSelectOptionData.detailOptionId}</p>
-                            <p>{eachSelectOptionData.detailOptionName}</p>
+                          <div className="selected-option-data">
+                            <p>{eachSelectOptionData[0]}</p>
+                            <p>{eachSelectOptionData[1]}</p>
                           </div>
                         );
                       })}
@@ -662,6 +636,7 @@ function ProductDetailPage() {
           {/* 제품 상세 정보 이미지 및 내용 노출 영역 */}
           <div
             className="product-details-tabs contents-info"
+            id="product-detail-image-section"
             dangerouslySetInnerHTML={{
               __html: productDetailInfo.productDetailInfo,
             }}
@@ -918,7 +893,7 @@ function ProductDetailPage() {
               </div>
               <div className="recall-change-notice-contents">
                 <tbody className="recall-change-table">
-                  <tr>
+                  <tr key="recall-change-fix-delivery">
                     <th>
                       <span>판매자 지정택배사</span>
                     </th>
@@ -926,7 +901,7 @@ function ProductDetailPage() {
                       <span>CJ대한통운</span>
                     </td>
                   </tr>
-                  <tr>
+                  <tr key="recall-change-delivery-price">
                     <th>반품배송비</th>
                     <td>
                       반품안심케어에 가입된 상품으로 반품 배송비 무료 <br />
@@ -940,14 +915,14 @@ function ProductDetailPage() {
                       도서산간비 별도 부과)
                     </td>
                   </tr>
-                  <tr>
+                  <tr key="recall-change-send-place">
                     <th>보내실 곳</th>
                     <td colSpan={3}>
                       경기도 이천시 부발읍 황무로 2037-37 로지스벨리 (우 :
                       17405)
                     </td>
                   </tr>
-                  <tr>
+                  <tr key="recall-change-possible-date">
                     <th rowSpan={2}>
                       반품/교환 사유에 <br />
                       따른 요청 가능 기간
@@ -957,7 +932,7 @@ function ProductDetailPage() {
                       반품배송비 부담)
                     </td>
                   </tr>
-                  <tr>
+                  <tr key="recall-change-additional-info">
                     <td colSpan={3}>
                       표시/광고와 상이, 계약 내용과 다르게 이행된 경우 상품 수령
                       후 3개월 이내 혹은 표시/광고와 다른 사실을 안 날로부터
@@ -965,7 +940,7 @@ function ProductDetailPage() {
                       반품/교환 불가
                     </td>
                   </tr>
-                  <tr>
+                  <tr key="recall-change-impossible-reason">
                     <th>반품/교환 불가능 사유</th>
                     <td colSpan={3}>
                       <ul>

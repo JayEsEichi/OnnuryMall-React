@@ -152,7 +152,7 @@ function Header() {
   }, []);
 
   return (
-    <header>
+    <header id="header-wrapper">
       <div id="header-content">
         <div id="header-content-1" className="header-container">
           <div id="header-detail-content-1">

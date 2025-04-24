@@ -1,4 +1,5 @@
-header {
+#header-wrapper {
+  display: grid;
   justify-items: center;
 }
 
